@@ -48,14 +48,14 @@ const wagmiConfig = getDefaultConfig({
 // Create and export the App component wrapped with the RainbowKitProvider and WagmiConfig.
 function App({ Component, pageProps }: AppProps) {
     return (
-        <WagmiProvider client={wagmiConfig}>
-            <RainbowKitProvider chains={chains} coolMode={true}>
+        <WagmiProvider config={wagmiConfig}>
+            <RainbowKitProvider>
                 <ToastContainer position={"bottom-center"} />
                 <Layout>
                     <Component {...pageProps} />
                 </Layout>
             </RainbowKitProvider>
-        </WagmiConfig>
+        </WagmiProvider>
     );
 }
 
