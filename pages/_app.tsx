@@ -7,14 +7,14 @@ import type { AppProps } from "next/app";
 
 import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 
-import type { Chain } from "viem";
-import { WagmiProvider } from "wagmi";
+import { defineChain, type Chain } from "viem";
+import { createConfig, http, WagmiProvider } from "wagmi";
 
 import Layout from "../components/Layout";
 import { ToastContainer } from "react-toastify";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-const teaAssam = {
+const teaAssam = defineChain({
     id: 93384,
     name: 'tea-assam',
     nativeCurrency: {
@@ -38,13 +38,22 @@ const teaAssam = {
     },
 
     testnet: false,
-} as const satisfies Chain;
+});
+
+// const wagmiConfig = getDefaultConfig({
+//     appName: "tippit",
+//     projectId: "jkionbv",
+//     chains: [teaAssam]
+// });
 
 const wagmiConfig = getDefaultConfig({
     appName: "tippit",
-    projectId: "jkionbv",
-    chains: [teaAssam]
-});
+    projectId: "assam",
+    chains: [teaAssam],
+    transports: {
+      [teaAssam.id]: http('https://assam-rpc.tea.xyz'),
+    },
+  })
 
 const qClient = new QueryClient();
 

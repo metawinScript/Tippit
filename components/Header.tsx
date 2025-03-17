@@ -51,12 +51,12 @@ export default function Header() {
                             </div>
                             <div className="flex items-center">
                                 <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                                    <Link
+                                    {/* <Link
                                         href="/faucet"
                                         className="text-2xl inline-flex items-center border-b-2 border-black px-1 pt-1 font-medium text-gray-900"
                                     >
                                         FAUCET
-                                    </Link>
+                                    </Link> */}
                                 </div>
                                 <div>
                                     {displayBalance && (
@@ -66,7 +66,7 @@ export default function Header() {
                                             data-bs-target="#exampleModalCenter"
                                         >
                                             Balance: {Number(ethBalance?.formatted || 0).toFixed(2)}{" "}
-                                            OKP ETH
+                                            TEA
                                         </span>
                                     )}
                                 </div>

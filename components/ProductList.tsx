@@ -1,21 +1,25 @@
-// This component is used to display all the products in the marketplace
 
-// Importing the dependencies
 import { useState } from "react";
-// Import the useContractCall hook to read how many products are in the marketplace via the contract
-import { useContractCall } from "@/hooks/contract/useContractRead";
-// Import the Product and Alert components
+
 import Product from "@/components/Product";
 import ErrorAlert from "@/components/alerts/ErrorAlert";
 import LoadingAlert from "@/components/alerts/LoadingAlert";
 import SuccessAlert from "@/components/alerts/SuccessAlert";
+import { useReadContract } from "wagmi";
+import marketplaceInstance from "@/abi/Marketplace.json"
 
 // Define the ProductList component
 const ProductList = () => {
     // Use the useContractCall hook to read how many products are in the marketplace contract
-    const { data } = useContractCall("getNewsLength", [], true);
+    //getNewsLength, []
+    const { data: len, refetch} = useReadContract({
+        abi: marketplaceInstance.abi,
+        address: marketplaceInstance.address as `0x${string}`,
+        functionName: "getNewsLength",
+        args: []
+    });
     // Convert the data to a number
-    const productLength = data ? Number(data.toString()) : 0;
+    const productLength = len ? Number(len.toString()) : 0;
     // Define the states to store the error, success and loading messages
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");

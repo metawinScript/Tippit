@@ -1,24 +1,14 @@
-/* eslint-disable @next/next/no-img-element */
-// This component displays and enables the purchase of a product
 
-// Importing the dependencies
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-// Import ethers to format the price of the product correctly
 import { BigNumber, ethers } from "ethers";
-// Import the useConnectModal hook to trigger the wallet connect modal
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-// Import the useAccount hook to get the user's address
-import { useAccount } from "wagmi";
-// Import the toast library to display notifications
+import { useAccount, useReadContract, useWriteContract } from "wagmi";
 import { toast } from "react-toastify";
-// Import our custom identicon template to display the owner of the product
 import { identiconTemplate } from "@/helpers";
-// Import our custom hooks to interact with the smart contract
-import { useContractCall } from "@/hooks/contract/useContractRead";
-import { useContractSend } from "@/hooks/contract/useContractWrite";
+import marketplaceInstance from "@/abi/Marketplace.json"
 
-// Define the interface for the product, an interface is a type that describes the properties of an object
+
 interface Product {
     owner: string;
     title: string;
@@ -26,24 +16,25 @@ interface Product {
     likes: number;
     tips: number;
 }
-// Approve the spending of the product's price, for the ERC20 cUSD contract
-// const approveTx = await approve();
-// Define the Product component which takes in the id of the product and some functions to display notifications
+
 const Product = ({ id, setError, setLoading, clear }: any) => {
     const [product, setProduct] = useState<Product | null>(null);
     const [tipAmount, setTipAmount] = useState(0);
-    // Use the useAccount hook to store the user's address
     const { address } = useAccount();
-    // Use the useContractCall hook to read the data of the product with the id passed in, from the marketplace contract
-    const { data: rawProduct }: any = useContractCall("getNews", [id], true);
-    // Use the useContractSend hook to purchase the product with the id passed in, via the marketplace contract
-    // const newsPriceInWei = ethers.utils.parseEther(debouncedNewsPrice.toString());
-    const _amount = ethers.utils.parseEther(tipAmount.toString());
-    const { writeAsync: tipCreator } = useContractSend("tipCreator", [Number(id), _amount], _amount);
-    const { writeAsync: likeAndDislikeNews } = useContractSend("likeAndDislikeNews", [Number(id)], undefined);
 
-    // Use the useContractApprove hook to approve the spending of the product's price, for the ERC20 cUSD contract
-    // const { writeAsync: approve } = useContractApprove(product?.price?.toString() || "0");
+    const { writeContractAsync: tipCreator } = useWriteContract();
+    const { writeContractAsync: likeAndDislikeNews } = useWriteContract();
+
+
+    const { data: rawProduct, refetch }: any = useReadContract({
+        abi: marketplaceInstance.abi,
+        address: marketplaceInstance.address as `0x${string}`,
+        functionName: "getNews",
+        args: [id]
+    });
+    const _amount = ethers.utils.parseEther(tipAmount.toString());
+
+
     // Use the useConnectModal hook to trigger the wallet connect modal
     const { openConnectModal } = useConnectModal();
     // Format the product data that we read from the smart contract
@@ -65,12 +56,26 @@ const Product = ({ id, setError, setLoading, clear }: any) => {
 
     // Define the handlePurchase function which handles the purchase interaction with the smart contract
     const handleLikeNews = async () => {
-        if (!likeAndDislikeNews) {
-            throw "Failed to like this news";
-        }
-        const res = await likeAndDislikeNews();
-        await res.wait();
-        setLoading("Liking news...");
+        // try {
+
+            if (!likeAndDislikeNews) {
+                throw "Failed to like this news";
+            }
+            await likeAndDislikeNews({
+                abi: marketplaceInstance.abi,
+                address: marketplaceInstance.address as `0x${string}`,
+                functionName: "likeAndDislikeNews",
+                args: [Number(id)]
+            });
+    
+            setLoading("Liking news...");
+            toast.success("News liked/disliked successfully")
+        // } catch(err) {
+
+        //     setLoading("Liking news failed");
+        //     toast.error("News liked/disliked failed")
+        // }
+        
     };
 
     // Define the purchaseProduct function that is called when the user clicks the purchase button
@@ -103,8 +108,14 @@ const Product = ({ id, setError, setLoading, clear }: any) => {
         if (!tipCreator) {
             throw "Failed to tip this news creator";
         }
-        const res = await tipCreator();
-        await res.wait();
+
+        await tipCreator({
+            abi: marketplaceInstance.abi,
+            address: marketplaceInstance.address as `0x${string}`,
+            functionName: "getNews",
+            args: [Number(id)]
+        });
+       
         setLoading("Tipping news...");
     };
 
@@ -148,7 +159,7 @@ const Product = ({ id, setError, setLoading, clear }: any) => {
                     </div>
 
                     <div className={"mr-4 mt-4 bg-amber-400 text-black p-1 rounded-l-lg px-4"}>
-                        {ethers.utils.formatEther(product.tips.toString())} OKP ETH
+                        {ethers.utils.formatEther(product.tips.toString())} TEA
                     </div>
                 </div>
 

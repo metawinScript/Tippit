@@ -1,7 +1,6 @@
 import { FC, ReactNode } from "react";
 import Footer from "./Footer";
 import Header from "./Header";
-import Faucet from "./Faucet";
 
 interface Props {
     children: ReactNode;
