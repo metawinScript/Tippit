@@ -7,6 +7,7 @@ import { useAccount, useReadContract, useWriteContract } from "wagmi";
 import { toast } from "react-toastify";
 import { identiconTemplate } from "@/helpers";
 import marketplaceInstance from "@/abi/Marketplace.json"
+import { parseEther } from "viem";
 
 
 interface Product {
@@ -32,8 +33,6 @@ const Product = ({ id, setError, setLoading, clear }: any) => {
         functionName: "getNews",
         args: [id]
     });
-    const _amount = ethers.utils.parseEther(tipAmount.toString());
-
 
     // Use the useConnectModal hook to trigger the wallet connect modal
     const { openConnectModal } = useConnectModal();
@@ -47,6 +46,13 @@ const Product = ({ id, setError, setLoading, clear }: any) => {
             likes: Number(rawProduct[3]),
             tips: Number(rawProduct[4]),
         });
+        console.log({
+            owner: rawProduct[0],
+            title: rawProduct[1],
+            description: rawProduct[2],
+            likes: Number(rawProduct[3]),
+            tips: Number(rawProduct[4]),
+        })
     }, [rawProduct]);
 
     // Call the getFormatProduct function when the rawProduct state changes
@@ -56,25 +62,20 @@ const Product = ({ id, setError, setLoading, clear }: any) => {
 
     // Define the handlePurchase function which handles the purchase interaction with the smart contract
     const handleLikeNews = async () => {
-        // try {
 
-            if (!likeAndDislikeNews) {
-                throw "Failed to like this news";
-            }
-            await likeAndDislikeNews({
-                abi: marketplaceInstance.abi,
-                address: marketplaceInstance.address as `0x${string}`,
-                functionName: "likeAndDislikeNews",
-                args: [Number(id)]
-            });
-    
-            setLoading("Liking news...");
-            toast.success("News liked/disliked successfully")
-        // } catch(err) {
 
-        //     setLoading("Liking news failed");
-        //     toast.error("News liked/disliked failed")
-        // }
+        if (!likeAndDislikeNews) {
+            throw "Failed to like this news";
+        }
+        await likeAndDislikeNews({
+            abi: marketplaceInstance.abi,
+            address: marketplaceInstance.address as `0x${string}`,
+            functionName: "likeAndDislikeNews",
+            args: [Number(id)]
+        });
+        await refetch();
+
+        setLoading("Liking news...");
         
     };
 
@@ -109,12 +110,16 @@ const Product = ({ id, setError, setLoading, clear }: any) => {
             throw "Failed to tip this news creator";
         }
 
+        console.log({tipAmount_:parseEther(String(tipAmount))});
+
         await tipCreator({
             abi: marketplaceInstance.abi,
             address: marketplaceInstance.address as `0x${string}`,
-            functionName: "getNews",
-            args: [Number(id)]
+            functionName: "tipCreator",
+            args: [Number(id)],
+            value: parseEther(String(tipAmount))
         });
+        await refetch();
        
         setLoading("Tipping news...");
     };
@@ -160,6 +165,7 @@ const Product = ({ id, setError, setLoading, clear }: any) => {
 
                     <div className={"mr-4 mt-4 bg-amber-400 text-black p-1 rounded-l-lg px-4"}>
                         {ethers.utils.formatEther(product.tips.toString())} TEA
+                        {/* {product.tips.toString()} Tea */}
                     </div>
                 </div>
 
@@ -176,7 +182,7 @@ const Product = ({ id, setError, setLoading, clear }: any) => {
                     <div className="mt-4">
                         <input
                             type="number"
-                            onChange={(e) => setTipAmount(e.target.value as unknown as number)}
+                            onChange={(e) => {setTipAmount(e.target.value as unknown as number); console.log(e.target.value)}}
                             placeholder="Enter amount in eth"
                             className="h-10 pl-4 w-[100%]"
                         />
