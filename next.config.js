@@ -12,12 +12,16 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  // basePath: "/github-pages",
+  // output: "export",
+  // basePath: "/Tippit",
+  // assetPrefix: '/Tippit/',
+  images: {
+    unoptimized: true,
+  },
   exportPathMap: function () {
     // /Next-React-Components
     return {
       "/": { page: "/" },
-      "/faucet": { page: "/faucet" },
     };
   },
 };

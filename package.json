@@ -4,9 +4,10 @@
     "private": true,
     "scripts": {
         "dev": "next dev",
-        "build": "next build",
         "start": "next start",
-        "lint": "next lint"
+        "lint": "next lint",
+        "build": "next build && next export",
+        "deploy": "npm run build && npm run export && touch ./out/.nojekyll && gh-pages -d out -t true"
     },
     "dependencies": {
         "@headlessui/react": "^1.7.13",
@@ -31,6 +32,7 @@
         "autoprefixer": "^10.4.14",
         "eslint": "8.36.0",
         "eslint-config-next": "13.2.4",
+        "gh-pages": "^6.3.0",
         "postcss": "^8.4.21",
         "tailwindcss": "^3.2.7",
         "typescript": "^5.8.2"
