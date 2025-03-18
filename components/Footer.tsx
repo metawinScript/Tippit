@@ -1,4 +1,4 @@
-import portalImg from "../public/portal.png";
+
 import Image from "next/image";
 
 type Props = {
@@ -7,9 +7,8 @@ type Props = {
 
 const navigation = [
     {
-        name: "portal",
-        href: "https://portal.dymension.xyz/ibc",
-        icon: portalImg,
+        name: "Tippit",
+        href: "",
     },
 ];
 
@@ -18,6 +17,7 @@ export default function Footer() {
         <footer className="bg-gypsum mt-auto border-black border-t">
             <div className="mx-auto max-w-7xl py-6 px-4 sm:px-6 md:flex md:items-center md:justify-between lg:px-8">
                 <div className="flex justify-center space-x-6 md:order-2">
+                
                     {navigation.map((item) => (
                         <a
                             key={item.name}
@@ -27,10 +27,9 @@ export default function Footer() {
                             rel="noopener noreferrer"
                         >
                             <span className="sr-only">{item.name}</span>
-                            {/* <item.icon className="h-6 w-6" aria-hidden="true" /> */}
-                            <Image src={item.icon} alt="portalImg" className="h-10 w-10" aria-hidden="true" />
                         </a>
                     ))}
+                  
                 </div>
             </div>
         </footer>
