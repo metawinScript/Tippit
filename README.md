@@ -1,39 +1,83 @@
-# React Framework + NextJS | Celo Composer
+## DropTheNews 📰
 
-Celo Composer support React boilerplate template with TailwindCSS. This is a starter kit with no additional boilerplate code. It's a perfect starter kit to get your project started on Celo blockchain.
+DropTheNews is a decentralized application (dApp) that allows users to post news, like/dislike news articles, and tip the news creators using Ethereum.
 
-## Setup & Installation
+### Features
 
-```bash
-yarn
+📝 Create News – Users can post news with a title and description.
+
+👍 Like/Dislike News – Users can like or dislike news articles.
+
+💰 Tip News Creators – Users can send ETH tips to news creators.
+
+🗑 Delete News – News creators can delete their own posts.
+
+
+### Smart Contract Overview
+
+The DropTheNews contract provides the following functionality:
+
+📌 Post News
+
+Users can create a news article by calling:
+
+```
+function postNews(string calldata _title, string calldata _description) public
 ```
 
-Run `yarn` or `npm install` to install all the required dependencies to run the dApp.
+📌 Get News
 
-> React + Tailwind CSS Template does not have any dependency on hardhat and truffle.
-> This starterkit does not include connection of Hardhat/Truffle with ReactJS. It's up to the user to integrate smart contract with ReactJS. This gives user more flexibily over the dApp.
-
-- To start the dApp, run the following command.
-
-```bash
-yarn react-dev
+Fetch a specific news item using:
+```
+function getNews(uint _index) public view returns (address payable, string memory, string memory, uint, uint)
 ```
 
-## Dependencies
+📌 Like/Dislike News
 
-### Default
-- [Next.js](https://nextjs.org/) app framework
-- [TailwindCSS](https://tailwindcss.com/) for UI
+Toggle a like/dislike on a news article:
+```
+function likeAndDislikeNews(uint _index) public
+```
+📌 Tip News Creator
 
-### Optional
-> On CLI setup you'll be able to select your favorive front-end web3 library to interact with the Celo blockchain:
-- [react-celo](https://www.npmjs.com/package/@celo/react-celo), a React hook library for managing access to Celo with a built-in headless modal system for connecting to your users wallet of choice.
-- [rainbowkit-celo](https://www.npmjs.com/package/@celo/rainbowkit-celo), a plugin to help rainbowkit developers support the CELO protocol faster.
+Send ETH tips to a news creator:
+```
+function tipCreator(uint _index) public payable
+```
+📌 Delete News
 
-## Architecture
+Only the news creator can delete their news:
+```
+function deleteNews(uint _index) public
+```
+📌 Get Total News Count
 
-- `/pages` includes the main application components (specifically `index.tsx` and `_app.tsx`)
-  - `_app.tsx` includes configuration
-  - `index.tsx` is the main page of the application
-- `/components` includes components that are rendered in `index.tsx`
-- `/public` includes static files
+Retrieve the total number of news articles:
+```
+function getNewsLength() public view returns (uint)
+```
+### 🛠 Deployment
+
+Deploy the contract on Ethereum, Sepolia, or any EVM-compatible chain using Hardhat, Foundry, or Remix.
+
+### 💡 Usage
+
+1. Post news using postNews("Title", "Description").
+
+
+2. Like/dislike news with likeAndDislikeNews(newsId).
+
+
+3. Tip a creator by sending ETH via tipCreator(newsId).
+
+
+4. Retrieve news using getNews(newsId).
+
+
+5. Delete news if you are the creator with deleteNews(newsId).
+
+
+
+### 📜 License
+
+This project is licensed under the MIT License.
