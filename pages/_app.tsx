@@ -15,8 +15,8 @@ import { ToastContainer } from "react-toastify";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const teaAssam = defineChain({
-    id: 93384,
-    name: 'tea-assam',
+    id: 10218,
+    name: 'tea-sepolia',
     nativeCurrency: {
         decimals: 18,
         name: 'Tea',
@@ -24,34 +24,30 @@ const teaAssam = defineChain({
     },
     rpcUrls: {
         public: {
-            http: ['https://assam-rpc.tea.xyz'],
+            http: ['https://tea-sepolia.g.alchemy.com/public'],
         },
         default: {
-            http: ['https://assam-rpc.tea.xyz'],
+            http: ['https://tea-sepolia.g.alchemy.com/public'],
         },
     },
     blockExplorers: {
         default: {
-            name: 'tea-assam',
-            url: 'https://assam.tea.xyz',
+            name: 'tea-sepolia',
+            url: 'https://sepolia.tea.xyz',
         },
     },
 
     testnet: false,
 });
 
-// const wagmiConfig = getDefaultConfig({
-//     appName: "tippit",
-//     projectId: "jkionbv",
-//     chains: [teaAssam]
-// });
+
 
 const wagmiConfig = getDefaultConfig({
     appName: "tippit",
-    projectId: "assam",
+    projectId: "tea-sepolia",
     chains: [teaAssam],
     transports: {
-      [teaAssam.id]: http('https://assam-rpc.tea.xyz'),
+      [teaAssam.id]: http('https://tea-sepolia.g.alchemy.com/public'),
     },
   })
 

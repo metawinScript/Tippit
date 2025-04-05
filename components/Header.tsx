@@ -9,7 +9,7 @@ import Link from "next/link";
 export default function Header() {
     // Use the useAccount hook to store the user's address
     const { address, isConnected } = useAccount();
-    const { data: ethBalance } = useBalance({ address, chainId: 0x500fad });
+    const { data: ethBalance } = useBalance({ address, chainId: 10218 });
     const [displayBalance, setDisplayBalance] = useState(false);
 
     // If the user is connected and has a balance, display the balance
